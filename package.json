@@ -1,0 +1,20 @@
+{
+    "name": "sm-automat",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Social media video views tracker — daily Apify scrape → Google Sheets → Dashboard",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "scrape": "node scripts/dailyUpdate.js",
+        "scrape:dry": "node scripts/dailyUpdate.js --dry-run",
+        "test:sheet": "node scripts/sheetClient.js --test"
+    },
+    "dependencies": {
+        "apify-client": "^2.9.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.0",
+        "express": "^4.18.2",
+        "googleapis": "^170.1.0"
+    }
+}

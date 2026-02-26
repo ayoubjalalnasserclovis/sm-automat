@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM Automat — Video Views Dashboard</title>
+    <meta name="description" content="Daily video views tracker for YouTube, Instagram & TikTok">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ─── Header ──────────────────────────────────── -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <span class="logo-text">SM Automat</span>
+            </div>
+            <span class="header-subtitle">Video Views Tracker</span>
+        </div>
+        <div class="header-right">
+            <div class="last-update" id="lastUpdate">
+                <span class="pulse"></span>
+                <span>Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── Summary Cards ────────────────────────────── -->
+    <main class="container">
+        <section class="summary-grid" id="summaryGrid">
+            <div class="card card-total">
+                <div class="card-icon">🎬</div>
+                <div class="card-body">
+                    <span class="card-label">Total Videos</span>
+                    <span class="card-value" id="totalVideos">—</span>
+                </div>
+            </div>
+            <div class="card card-views">
+                <div class="card-icon">👁️</div>
+                <div class="card-body">
+                    <span class="card-label">Total Views</span>
+                    <span class="card-value" id="totalViews">—</span>
+                </div>
+            </div>
+            <div class="card card-likes">
+                <div class="card-icon">❤️</div>
+                <div class="card-body">
+                    <span class="card-label">Total Likes</span>
+                    <span class="card-value" id="totalLikes">—</span>
+                </div>
+            </div>
+            <div class="card card-platforms">
+                <div class="card-icon">🌐</div>
+                <div class="card-body">
+                    <span class="card-label">Platforms</span>
+                    <span class="card-value" id="totalPlatforms">—</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Platform Breakdown ─────────────────────── -->
+        <section class="platform-breakdown" id="platformBreakdown">
+            <!-- dynamically populated -->
+        </section>
+
+        <!-- ─── Filters ──────────────────────────────── -->
+        <section class="filter-bar">
+            <div class="filter-tabs" id="filterTabs">
+                <button class="tab active" data-platform="all">All</button>
+                <button class="tab" data-platform="YouTube">
+                    <span class="tab-dot yt"></span> YouTube
+                </button>
+                <button class="tab" data-platform="Instagram">
+                    <span class="tab-dot ig"></span> Instagram
+                </button>
+                <button class="tab" data-platform="TikTok">
+                    <span class="tab-dot tt"></span> TikTok
+                </button>
+            </div>
+            <div class="search-wrap">
+                <input type="text" id="searchInput" placeholder="Search videos..." class="search-input">
+            </div>
+        </section>
+
+        <!-- ─── Data Table ───────────────────────────── -->
+        <section class="table-section">
+            <div class="table-wrapper">
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Title</th>
+                            <th class="num">Views</th>
+                            <th class="num">Likes</th>
+                            <th>Post Date</th>
+                            <th>Last Scraped</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="7" class="loading-row">Loading data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ─── Empty State ──────────────────────────── -->
+        <section class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">📭</div>
+            <h2>No data yet</h2>
+            <p>Run the daily scraper to populate your dashboard</p>
+            <code>npm run scrape</code>
+        </section>
+    </main>
+
+    <!-- ─── Footer ──────────────────────────────────── -->
+    <footer class="footer">
+        <span>SM Automat • Auto-refreshes every 60s</span>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
