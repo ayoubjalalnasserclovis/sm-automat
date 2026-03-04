@@ -2,8 +2,8 @@
  * config.js — Central configuration for tracked channels/profiles
  * 
  * Two scrape modes:
- *   - FULL:  scrape ALL videos (monthly)
- *   - DAILY: scrape last 5 videos only (daily)
+ *   - FULL:  scrape up to FULL_LIMIT videos (monthly)
+ *   - DAILY: scrape last DAILY_LIMIT videos only (daily)
  */
 
 export const TRACKED_CHANNELS = {
@@ -22,8 +22,12 @@ export const TRACKED_CHANNELS = {
 export const DAILY_LIMIT = 5;      // daily: last 5 videos
 export const FULL_LIMIT = 500;     // monthly: cap at 500 per platform
 
-// Google Sheet tab name
-export const SHEET_NAME = 'Views';
+// Google Sheet tab names — one per platform
+export const SHEET_TABS = {
+    YouTube: 'YouTube',
+    Instagram: 'Instagram',
+    TikTok: 'TikTok',
+};
 
 // Apify actor IDs
 export const ACTORS = {
