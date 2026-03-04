@@ -51,19 +51,19 @@ const HEADERS = ['Scrape Date', 'Platform', 'Video ID', 'Title', 'URL', 'Views',
 
 /**
  * Ensures the 'Views' tab exists in the spreadsheet.
- * If not, creates it.
+ * Returns the numeric sheetId for use with batchUpdate requests.
  */
 async function ensureSheetTab(sheets) {
     try {
         const spreadsheet = await sheets.spreadsheets.get({
             spreadsheetId: SPREADSHEET_ID,
         });
-        const tabExists = spreadsheet.data.sheets.some(
+        const tab = spreadsheet.data.sheets.find(
             s => s.properties.title === SHEET_NAME
         );
-        if (!tabExists) {
+        if (!tab) {
             console.log(`📄 [Sheets] Creating tab "${SHEET_NAME}"...`);
-            await sheets.spreadsheets.batchUpdate({
+            const addRes = await sheets.spreadsheets.batchUpdate({
                 spreadsheetId: SPREADSHEET_ID,
                 resource: {
                     requests: [{
@@ -71,9 +71,45 @@ async function ensureSheetTab(sheets) {
                     }]
                 }
             });
+            return addRes.data.replies[0].addSheet.properties.sheetId;
         }
+        return tab.properties.sheetId;
     } catch (e) {
         console.warn('⚠️ [Sheets] Could not check/create tab:', e.message);
+        return 0;
+    }
+}
+
+/**
+ * Enables Google Sheets' built-in auto-filter on all columns.
+ * Users can then click column headers to filter by Platform, Views range, etc.
+ */
+async function ensureBasicFilter(sheets, sheetId, rowCount) {
+    try {
+        // Clear any existing filter first, then set a new one
+        const requests = [
+            { clearBasicFilter: { sheetId } },
+            {
+                setBasicFilter: {
+                    filter: {
+                        range: {
+                            sheetId,
+                            startRowIndex: 0,
+                            startColumnIndex: 0,
+                            endColumnIndex: HEADERS.length,
+                        }
+                    }
+                }
+            }
+        ];
+
+        await sheets.spreadsheets.batchUpdate({
+            spreadsheetId: SPREADSHEET_ID,
+            resource: { requests },
+        });
+        console.log('🔽 [Sheets] Auto-filter enabled on all columns');
+    } catch (e) {
+        console.warn('⚠️ [Sheets] Could not set filter:', e.message);
     }
 }
 
@@ -81,7 +117,7 @@ export async function ensureHeaders() {
     const client = await getAuthClient();
     const sheets = getSheetsApi(client);
 
-    await ensureSheetTab(sheets);
+    const sheetId = await ensureSheetTab(sheets);
 
     const res = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
@@ -99,6 +135,9 @@ export async function ensureHeaders() {
             resource: { values: [HEADERS] },
         });
     }
+
+    // Enable auto-filter on the sheet
+    await ensureBasicFilter(sheets, sheetId);
 }
 
 // ─── Read all data ─────────────────────────────────────────────────
@@ -212,6 +251,10 @@ export async function upsertResults(results) {
         });
         console.log(`➕ [Sheets] Appended ${toAppend.length} new rows`);
     }
+
+    // Re-apply auto-filter to cover new rows
+    const sheetId = await ensureSheetTab(sheets);
+    await ensureBasicFilter(sheets, sheetId);
 
     return { updated: updates.length / 2, appended: toAppend.length };
 }
