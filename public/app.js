@@ -18,6 +18,8 @@ const lastUpdateEl = document.getElementById('lastUpdate');
 const tableBody = document.getElementById('tableBody');
 const filterTabs = document.getElementById('filterTabs');
 const searchInput = document.getElementById('searchInput');
+const minViewsInput = document.getElementById('minViews');
+const maxViewsInput = document.getElementById('maxViews');
 const platformBreakdown = document.getElementById('platformBreakdown');
 const emptyState = document.getElementById('emptyState');
 const tableSection = document.querySelector('.table-section');
@@ -128,6 +130,8 @@ async function fetchData() {
 
 function renderTable() {
     const search = searchInput.value.toLowerCase();
+    const minViews = parseInt(minViewsInput.value) || 0;
+    const maxViews = parseInt(maxViewsInput.value) || Infinity;
 
     const filtered = allData.filter(row => {
         const matchPlatform = currentPlatform === 'all' || row['Platform'] === currentPlatform;
@@ -135,7 +139,9 @@ function renderTable() {
             (row['Title'] || '').toLowerCase().includes(search) ||
             (row['URL'] || '').toLowerCase().includes(search) ||
             (row['Platform'] || '').toLowerCase().includes(search);
-        return matchPlatform && matchSearch;
+        const views = parseInt(row['Views']) || 0;
+        const matchViews = views >= minViews && views <= maxViews;
+        return matchPlatform && matchSearch && matchViews;
     });
 
     if (filtered.length === 0) {
@@ -180,9 +186,9 @@ filterTabs.addEventListener('click', (e) => {
     renderTable();
 });
 
-searchInput.addEventListener('input', () => {
-    renderTable();
-});
+searchInput.addEventListener('input', () => renderTable());
+minViewsInput.addEventListener('input', () => renderTable());
+maxViewsInput.addEventListener('input', () => renderTable());
 
 // ─── Init & Auto-refresh ───────────────────────────────
 async function init() {

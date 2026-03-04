@@ -25,7 +25,9 @@
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -126,8 +128,17 @@ body::before {
 }
 
 @keyframes pulse-anim {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
 }
 
 /* ─── Container ─────────────────────────────────────── */
@@ -201,10 +212,21 @@ body::before {
 }
 
 /* card accent overrides */
-.card-total .card-icon { background: rgba(108, 92, 231, 0.12); }
-.card-views .card-icon { background: rgba(168, 85, 247, 0.12); }
-.card-likes .card-icon { background: rgba(236, 72, 153, 0.12); }
-.card-platforms .card-icon { background: rgba(16, 185, 129, 0.12); }
+.card-total .card-icon {
+    background: rgba(108, 92, 231, 0.12);
+}
+
+.card-views .card-icon {
+    background: rgba(168, 85, 247, 0.12);
+}
+
+.card-likes .card-icon {
+    background: rgba(236, 72, 153, 0.12);
+}
+
+.card-platforms .card-icon {
+    background: rgba(16, 185, 129, 0.12);
+}
 
 /* ─── Platform Breakdown ────────────────────────────── */
 .platform-breakdown {
@@ -235,9 +257,17 @@ body::before {
     border-radius: var(--radius) var(--radius) 0 0;
 }
 
-.platform-card.youtube::before { background: var(--yt-color); }
-.platform-card.instagram::before { background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-.platform-card.tiktok::before { background: linear-gradient(90deg, var(--tt-color), #ff0050); }
+.platform-card.youtube::before {
+    background: var(--yt-color);
+}
+
+.platform-card.instagram::before {
+    background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.platform-card.tiktok::before {
+    background: linear-gradient(90deg, var(--tt-color), #ff0050);
+}
 
 .platform-card:hover {
     background: var(--bg-card-hover);
@@ -336,9 +366,70 @@ body::before {
     display: inline-block;
 }
 
-.tab-dot.yt { background: var(--yt-color); }
-.tab-dot.ig { background: var(--ig-color); }
-.tab-dot.tt { background: var(--tt-color); }
+.tab-dot.yt {
+    background: var(--yt-color);
+}
+
+.tab-dot.ig {
+    background: var(--ig-color);
+}
+
+.tab-dot.tt {
+    background: var(--tt-color);
+}
+
+.views-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+}
+
+.views-filter-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.views-filter-sep {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.views-input {
+    width: 90px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    transition: var(--transition);
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.views-input::-webkit-outer-spin-button,
+.views-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.views-input::placeholder {
+    color: var(--text-muted);
+}
+
+.views-input:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+}
 
 .search-wrap {
     flex-shrink: 0;
@@ -535,6 +626,7 @@ body::before {
     .summary-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .platform-breakdown {
         grid-template-columns: 1fr;
     }
@@ -546,19 +638,24 @@ body::before {
         gap: 12px;
         padding: 14px 16px;
     }
+
     .container {
         padding: 20px 12px;
     }
+
     .summary-grid {
         grid-template-columns: 1fr;
     }
+
     .filter-bar {
         flex-direction: column;
         align-items: stretch;
     }
+
     .search-input {
         width: 100%;
     }
+
     .title-cell {
         max-width: 160px;
     }

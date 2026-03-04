@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,11 @@
     <meta name="description" content="Daily video views tracker for YouTube, Instagram & TikTok">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- ─── Header ──────────────────────────────────── -->
     <header class="header">
@@ -80,6 +83,12 @@
                     <span class="tab-dot tt"></span> TikTok
                 </button>
             </div>
+            <div class="views-filter">
+                <span class="views-filter-label">👁️ Views</span>
+                <input type="number" id="minViews" placeholder="Min" class="views-input" min="0">
+                <span class="views-filter-sep">–</span>
+                <input type="number" id="maxViews" placeholder="Max" class="views-input" min="0">
+            </div>
             <div class="search-wrap">
                 <input type="text" id="searchInput" placeholder="Search videos..." class="search-input">
             </div>
@@ -101,7 +110,9 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <tr><td colspan="7" class="loading-row">Loading data...</td></tr>
+                        <tr>
+                            <td colspan="7" class="loading-row">Loading data...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -123,4 +134,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
