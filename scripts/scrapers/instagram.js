@@ -1,26 +1,26 @@
 /**
  * Instagram Scraper — Uses Apify apify/instagram-scraper
- * Scrapes profile posts and returns view/like counts.
+ * 
+ * @param {import('apify-client').ApifyClient} apifyClient
+ * @param {object} options
+ * @param {number|null} options.maxItems - null = ALL posts, number = limit
  */
 
 import { TRACKED_CHANNELS, ACTORS } from '../../config.js';
 
-/**
- * @param {import('apify-client').ApifyClient} apifyClient
- * @returns {Promise<Array<{platform: string, url: string, title: string, views: number, likes: number, date: string, id: string}>>}
- */
-export async function scrapeInstagram(apifyClient) {
+export async function scrapeInstagram(apifyClient, { maxItems = null } = {}) {
     const config = TRACKED_CHANNELS.instagram;
-    console.log(`📸 [Instagram] Scraping profile: ${config.profileUrl}`);
+    const label = maxItems ? `last ${maxItems}` : 'ALL';
+    console.log(`📸 [Instagram] Scraping ${label} posts from: ${config.profileUrl}`);
 
     const input = {
         directUrls: [config.profileUrl],
         resultsType: 'posts',
-        resultsLimit: config.resultsLimit || 50,
+        resultsLimit: maxItems || 9999,
     };
 
     const run = await apifyClient.actor(ACTORS.instagram).call(input, {
-        waitSecs: 300,
+        waitSecs: 600,
     });
 
     const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();

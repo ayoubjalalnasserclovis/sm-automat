@@ -1,27 +1,27 @@
 /**
  * YouTube Scraper — Uses Apify streamers/youtube-scraper
- * Scrapes the channel for all videos/shorts and returns view counts.
+ * 
+ * @param {import('apify-client').ApifyClient} apifyClient
+ * @param {object} options
+ * @param {number|null} options.maxItems - null = ALL videos, number = limit
  */
 
 import { TRACKED_CHANNELS, ACTORS } from '../../config.js';
 
-/**
- * @param {import('apify-client').ApifyClient} apifyClient
- * @returns {Promise<Array<{platform: string, url: string, title: string, views: number, likes: number, date: string, id: string}>>}
- */
-export async function scrapeYouTube(apifyClient) {
+export async function scrapeYouTube(apifyClient, { maxItems = null } = {}) {
     const config = TRACKED_CHANNELS.youtube;
-    console.log(`🎬 [YouTube] Scraping channel: ${config.channelUrl}`);
+    const label = maxItems ? `last ${maxItems}` : 'ALL';
+    console.log(`🎬 [YouTube] Scraping ${label} videos from: ${config.channelUrl}`);
 
     const input = {
         startUrls: [{ url: config.channelUrl }],
-        maxResults: config.maxResults || 50,
-        maxResultsShorts: config.maxResultsShorts || 50,
+        maxResults: maxItems || 9999,
+        maxResultsShorts: maxItems || 9999,
         maxResultStreams: 0,
     };
 
     const run = await apifyClient.actor(ACTORS.youtube).call(input, {
-        waitSecs: 300,
+        waitSecs: 600,
     });
 
     const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();

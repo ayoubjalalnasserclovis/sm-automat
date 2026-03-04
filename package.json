@@ -7,7 +7,9 @@
     "scripts": {
         "start": "node server.js",
         "scrape": "node scripts/dailyUpdate.js",
+        "scrape:full": "node scripts/dailyUpdate.js --full",
         "scrape:dry": "node scripts/dailyUpdate.js --dry-run",
+        "scrape:full:dry": "node scripts/dailyUpdate.js --full --dry-run",
         "test:sheet": "node scripts/sheetClient.js --test"
     },
     "dependencies": {

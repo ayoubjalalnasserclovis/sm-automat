@@ -1,26 +1,35 @@
 /**
  * dailyUpdate.js — Main orchestrator
  * 
- * Runs all scrapers, collects results, writes to Google Sheets.
+ * Two modes:
+ *   --full       Scrape ALL videos from every channel (monthly)
+ *   (default)    Scrape last 5 videos only (daily)
+ *   --dry-run    Print results without writing to sheet
+ * 
  * Usage:
- *   node scripts/dailyUpdate.js            # full run
- *   node scripts/dailyUpdate.js --dry-run   # print to console only
+ *   node scripts/dailyUpdate.js               # daily (last 5)
+ *   node scripts/dailyUpdate.js --full         # monthly (all videos)
+ *   node scripts/dailyUpdate.js --dry-run      # preview only
+ *   node scripts/dailyUpdate.js --full --dry-run
  */
 
 import 'dotenv/config';
 import { ApifyClient } from 'apify-client';
+import { DAILY_LIMIT } from '../config.js';
 import { scrapeYouTube } from './scrapers/youtube.js';
 import { scrapeInstagram } from './scrapers/instagram.js';
 import { scrapeTikTok } from './scrapers/tiktok.js';
 import { ensureHeaders, upsertResults } from './sheetClient.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
+const FULL_MODE = process.argv.includes('--full');
+const maxItems = FULL_MODE ? null : DAILY_LIMIT;
 
 async function main() {
     console.log('═══════════════════════════════════════════');
-    console.log(`📊 SM Automat — Daily Update`);
+    console.log(`📊 SM Automat — ${FULL_MODE ? 'FULL Scrape (all videos)' : `Daily Scrape (last ${DAILY_LIMIT})`}`);
     console.log(`📅 ${new Date().toISOString().split('T')[0]}`);
-    console.log(`🔧 Mode: ${DRY_RUN ? 'DRY RUN (no sheet write)' : 'LIVE'}`);
+    console.log(`🔧 Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}${FULL_MODE ? ' | FULL' : ' | DAILY'}`);
     console.log('═══════════════════════════════════════════\n');
 
     if (!process.env.APIFY_API_TOKEN) {
@@ -36,7 +45,7 @@ async function main() {
 
     // ─── YouTube ───────────────────────────────────────────────
     try {
-        const ytResults = await scrapeYouTube(apifyClient);
+        const ytResults = await scrapeYouTube(apifyClient, { maxItems });
         allResults.push(...ytResults);
         console.log(`   ✅ YouTube: ${ytResults.length} videos\n`);
     } catch (e) {
@@ -45,7 +54,7 @@ async function main() {
 
     // ─── Instagram ─────────────────────────────────────────────
     try {
-        const igResults = await scrapeInstagram(apifyClient);
+        const igResults = await scrapeInstagram(apifyClient, { maxItems });
         allResults.push(...igResults);
         console.log(`   ✅ Instagram: ${igResults.length} posts\n`);
     } catch (e) {
@@ -54,7 +63,7 @@ async function main() {
 
     // ─── TikTok ────────────────────────────────────────────────
     try {
-        const ttResults = await scrapeTikTok(apifyClient);
+        const ttResults = await scrapeTikTok(apifyClient, { maxItems });
         allResults.push(...ttResults);
         console.log(`   ✅ TikTok: ${ttResults.length} videos\n`);
     } catch (e) {

@@ -1,21 +1,21 @@
 /**
  * TikTok Scraper — Uses Apify clockworks/tiktok-scraper
- * Scrapes profile videos and returns play/like counts.
+ * 
+ * @param {import('apify-client').ApifyClient} apifyClient
+ * @param {object} options
+ * @param {number|null} options.maxItems - null = ALL videos, number = limit
  */
 
 import { TRACKED_CHANNELS, ACTORS } from '../../config.js';
 
-/**
- * @param {import('apify-client').ApifyClient} apifyClient
- * @returns {Promise<Array<{platform: string, url: string, title: string, views: number, likes: number, date: string, id: string}>>}
- */
-export async function scrapeTikTok(apifyClient) {
+export async function scrapeTikTok(apifyClient, { maxItems = null } = {}) {
     const config = TRACKED_CHANNELS.tiktok;
-    console.log(`🎵 [TikTok] Scraping profile: ${config.profileUrl}`);
+    const label = maxItems ? `last ${maxItems}` : 'ALL';
+    console.log(`🎵 [TikTok] Scraping ${label} videos from: ${config.profileUrl}`);
 
     const input = {
         profiles: [config.profileUrl],
-        resultsPerPage: config.resultsPerPage || 50,
+        resultsPerPage: maxItems || 9999,
         shouldDownloadVideos: false,
         shouldDownloadCovers: false,
         shouldDownloadSubtitles: false,
@@ -23,7 +23,7 @@ export async function scrapeTikTok(apifyClient) {
     };
 
     const run = await apifyClient.actor(ACTORS.tiktok).call(input, {
-        waitSecs: 300,
+        waitSecs: 600,
     });
 
     const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();
