@@ -86,6 +86,10 @@ async function main() {
         await ensureHeaders();
         const stats = await upsertResults(allResults);
         console.log(`\n✅ Done! Updated: ${stats.updated}, Appended: ${stats.appended}`);
+
+        // Sync the "All" tab
+        const { syncAllTab } = await import('./sync-all-tab.js');
+        await syncAllTab();
     } else {
         console.log('\n⚠️  No results to write.');
     }
