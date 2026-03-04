@@ -15,7 +15,7 @@
 
 import 'dotenv/config';
 import { ApifyClient } from 'apify-client';
-import { DAILY_LIMIT } from '../config.js';
+import { DAILY_LIMIT, FULL_LIMIT } from '../config.js';
 import { scrapeYouTube } from './scrapers/youtube.js';
 import { scrapeInstagram } from './scrapers/instagram.js';
 import { scrapeTikTok } from './scrapers/tiktok.js';
@@ -23,7 +23,7 @@ import { ensureHeaders, upsertResults } from './sheetClient.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const FULL_MODE = process.argv.includes('--full');
-const maxItems = FULL_MODE ? null : DAILY_LIMIT;
+const maxItems = FULL_MODE ? FULL_LIMIT : DAILY_LIMIT;
 
 async function main() {
     console.log('═══════════════════════════════════════════');

@@ -18,8 +18,9 @@ export const TRACKED_CHANNELS = {
     },
 };
 
-// How many videos to fetch in daily mode (last N)
-export const DAILY_LIMIT = 5;
+// How many videos to fetch per mode
+export const DAILY_LIMIT = 5;      // daily: last 5 videos
+export const FULL_LIMIT = 500;     // monthly: cap at 500 per platform
 
 // Google Sheet tab name
 export const SHEET_NAME = 'Views';
